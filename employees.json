@@ -1,0 +1,11 @@
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "vacationDays": [],
+        "schedule": {
+            "rotation": "4-week",
+            "days": ["Monday", "Tuesday", "Wednesday", "Thursday"]
+        }
+    }
+]
