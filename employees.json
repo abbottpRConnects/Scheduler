@@ -1,11 +1,16 @@
-[
-    {
-        "id": 1,
-        "name": "John Doe",
-        "vacationDays": [],
-        "schedule": {
-            "rotation": "4-week",
-            "days": ["Monday", "Tuesday", "Wednesday", "Thursday"]
+{
+    "employees": [
+        {
+            "name": "John Doe",
+            "department": "CO",
+            "schedule": "4-week: Monday, Tuesday, Thursday, Friday",
+            "vacationDays": ["2024-12-25", "2024-12-26"]
+        },
+        {
+            "name": "Jane Smith",
+            "department": "Service Tech",
+            "schedule": "same-day: Wednesday",
+            "vacationDays": ["2024-11-15"]
         }
-    }
-]
+    ]
+}
