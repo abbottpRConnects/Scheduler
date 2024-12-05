@@ -1,15 +1,15 @@
 {
     "employees": [
         {
-            "name": "John Doe",
+            "name": "Pace Abbott",
             "department": "CO",
-            "schedule": "4-week: Monday, Tuesday, Thursday, Friday",
+            "schedule": "2-week: Monday, Friday",
             "vacationDays": ["2024-12-25", "2024-12-26"]
         },
         {
-            "name": "Jane Smith",
-            "department": "Service Tech",
-            "schedule": "same-day: Wednesday",
+            "name": "Jacob Pollock",
+            "department": "CO",
+            "schedule": "2-week: Friday, Monday",
             "vacationDays": ["2024-11-15"]
         }
     ]
