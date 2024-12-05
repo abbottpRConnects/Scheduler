@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Schedule</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        nav a {
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+            border: 1px solid #4CAF50;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        nav a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        .form-group {
+            margin: 1rem 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .form-group input, .form-group select, .form-group button {
+            padding: 0.5rem;
+            width: 100%;
+            max-width: 300px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Work Schedule</h1>
+    </header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="employees.html">Manage Employees</a>
+        <a href="vacation.html">Vacation Days</a>
+    </nav>
+    <main>
+        <h2>Set Work Schedule</h2>
+        <form id="scheduleForm">
+            <div class="form-group">
+                <label for="employeeSelect">Select Employee</label>
+                <select id="employeeSelect" required>
+                    <!-- Employee options will be populated dynamically -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="rotationType">Select Rotation Type</label>
+                <select id="rotationType" required>
+                    <option value="same-day">Same Day Every Week</option>
+                    <option value="4-week">4-Week Rotation</option>
+                </select>
+            </div>
+            <div class="form-group" id="sameDayGroup">
+                <label for="workDay">Select Work Day</label>
+                <select id="workDay">
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                </select>
+            </div>
+            <div class="form-group" id="rotationGroup" style="display: none;">
+                <label>Select Work Days for 4-Week Rotation</label>
+                <div>
+                    <label><input type="checkbox" value="Monday"> Monday</label>
+                    <label><input type="checkbox" value="Tuesday"> Tuesday</label>
+                    <label><input type="checkbox" value="Wednesday"> Wednesday</label>
+                    <label><input type="checkbox" value="Thursday"> Thursday</label>
+                    <label><input type="checkbox" value="Friday"> Friday</label>
+                </div>
+            </div>
+            <button type="submit">Save Schedule</button>
+        </form>
+    </main>
+    <footer>
+        &copy; 2024 Work Schedule Planner
+    </footer>
+    <script>
+        let employees = [];
+
+        // Load employees from local storage
+        function loadEmployees() {
+            const storedEmployees = localStorage.getItem('employees');
+            employees = storedEmployees ? JSON.parse(storedEmployees) : [];
+            populateEmployeeSelect();
+        }
+
+        // Populate the employee dropdown
+        function populateEmployeeSelect() {
+            const employeeSelect = document.getElementById('employeeSelect');
+            employeeSelect.innerHTML = employees.map((employee, index) => 
+                `<option value="${index}">${employee.name}</option>`
+            ).join('');
+        }
+
+        // Handle rotation type change
+        document.getElementById('rotationType').addEventListener('change', function() {
+            const sameDayGroup = document.getElementById('sameDayGroup');
+            const rotationGroup = document.getElementById('rotationGroup');
+            if (this.value === 'same-day') {
+                sameDayGroup.style.display = 'block';
+                rotationGroup.style.display = 'none';
+            } else {
+                sameDayGroup.style.display = 'none';
+                rotationGroup.style.display = 'block';
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('scheduleForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const employeeIndex = document.getElementById('employeeSelect').value;
+            const rotationType = document.getElementById('rotationType').value;
+
+            if (employeeIndex !== "" && employees[employeeIndex]) {
+                const employee = employees[employeeIndex];
+                if (rotationType === 'same-day') {
+                    const workDay = document.getElementById('workDay').value;
+                    employee.schedule = `Same day: ${workDay}`;
+                } else {
+                    const selectedDays = Array.from(document.querySelectorAll('#rotationGroup input:checked'))
+                        .map(input => input.value);
+                    employee.schedule = `4-week rotation: ${selectedDays.join(', ')}`;
+                }
+
+                localStorage.setItem('employees', JSON.stringify(employees));
+                alert('Work schedule saved successfully!');
+            }
+        });
+
+        // Initial load
+        loadEmployees();
+    </script>
+</body>
+</html>
