@@ -17,18 +17,6 @@
         <a href="schedule-viewer.html">Schedule Viewer</a>
     </nav>
     <main>
-        <h2>Add Employee</h2>
-        <form id="employeeForm">
-            <label for="employeeName">Name:</label>
-            <input type="text" id="employeeName" required>
-            <label for="departmentSelect">Department:</label>
-            <select id="departmentSelect" required>
-                <option value="">Select Department</option>
-                <!-- Departments dynamically populated -->
-            </select>
-            <button type="submit">Add Employee</button>
-        </form>
-
         <h2>Employees</h2>
         <ul id="employeeList"></ul>
     </main>
@@ -38,75 +26,32 @@
 
     <script>
         let employees = [];
-        let departments = [];
 
-        // Load departments and employees from JSON file
+        // Load employees from employees.json file
         async function loadData() {
             try {
-                const employeeResponse = await fetch('employees.json');
-                employees = await employeeResponse.json();
-                const departmentsResponse = await fetch('departments.json');
-                departments = await departmentsResponse.json();
-                populateDepartmentDropdown();
-                renderEmployees();
+                const response = await fetch('employees.json');
+                if (response.ok) {
+                    employees = await response.json();
+                    renderEmployees();
+                } else {
+                    console.error('Failed to load employees data');
+                }
             } catch (error) {
-                console.error('Error loading data:', error);
+                console.error('Error loading employees:', error);
             }
-        }
-
-        // Populate department dropdown
-        function populateDepartmentDropdown() {
-            const departmentSelect = document.getElementById('departmentSelect');
-            departmentSelect.innerHTML = departments.map(dept => 
-                `<option value="${dept}">${dept}</option>`
-            ).join('');
         }
 
         // Render the employee list
         function renderEmployees() {
             const employeeList = document.getElementById('employeeList');
-            employeeList.innerHTML = employees.map((emp, index) => 
-                `<li>
-                    ${emp.name} (${emp.department})
-                    <button onclick="removeEmployee(${index})">Remove</button>
-                </li>`
-            ).join('');
-        }
-
-        // Add a new employee
-        document.getElementById('employeeForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const name = document.getElementById('employeeName').value.trim();
-            const department = document.getElementById('departmentSelect').value;
-
-            if (name && department) {
-                employees.push({ name, department, vacationDays: [], schedule: "" });
-                await saveEmployees();
-                renderEmployees();
-                this.reset();
-            }
-        });
-
-        // Remove an employee
-        async function removeEmployee(index) {
-            if (confirm('Are you sure you want to remove this employee?')) {
-                employees.splice(index, 1); // Remove employee from array
-                await saveEmployees(); // Save updated employee data to JSON file
-                renderEmployees(); // Re-render the employee list
-            }
-        }
-
-        // Save the updated employee data to the employees.json file
-        async function saveEmployees() {
-            try {
-                await fetch('employees.json', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(employees)
-                });
-            } catch (error) {
-                console.error('Error saving employees:', error);
-            }
+            employeeList.innerHTML = employees.length > 0 
+                ? employees.map(emp => 
+                    `<li>
+                        ${emp.name} (${emp.department})
+                    </li>`
+                ).join('')
+                : '<li>No employees found</li>';
         }
 
         // Initial load of data when page loads
