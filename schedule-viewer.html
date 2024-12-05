@@ -1,81 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedule Viewer</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
-</head>
-<body>
-    <header>
-        <h1>Schedule Viewer</h1>
-    </header>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="employees.html">Manage Employees</a>
-        <a href="vacation.html">Vacation Days</a>
-        <a href="work-schedule.html">Work Schedule</a>
-        <a href="holidays.html">Manage Holidays</a>
-    </nav>
-    <main>
-        <h2>Filter Schedule</h2>
-        <form id="filterForm">
-            <label for="departmentSelect">Department</label>
-            <select id="departmentSelect">
-                <option value="">All Departments</option>
-                <!-- Departments populated dynamically -->
-            </select>
-            <label for="employeeSelect">Employees</label>
-            <div id="employeeCheckboxes">
-                <!-- Employee checkboxes populated dynamically -->
-            </div>
-            <label for="viewType">View Type</label>
-            <select id="viewType">
-                <option value="week">Week</option>
-                <option value="month">Month</option>
-                <option value="3-month">Three Months</option>
-                <option value="6-month">Six Months</option>
-                <option value="12-month">Year</option>
-            </select>
-            <button type="submit">View Schedule</button>
-        </form>
-        <h2>Schedule</h2>
-        <div id="scheduleDisplay">
-            <!-- Schedule displayed here -->
-        </div>
-    </main>
-    <footer>
-        &copy; 2024 Work Schedule Planner
-    </footer>
-    <script>
-        const departments = JSON.parse(localStorage.getItem('departments')) || ["CO", "Service Tech"];
-        const employees = JSON.parse(localStorage.getItem('employees')) || [];
-        const holidays = JSON.parse(localStorage.getItem('holidays')) || [];
+<script>
+    let employees = [];
+    let departments = [];
+    let holidays = [];
 
-        function populateFilters() {
-            const departmentSelect = document.getElementById('departmentSelect');
-            departmentSelect.innerHTML = departments.map(department => 
-                `<option value="${department}">${department}</option>`
-            ).join('');
-
-            const employeeCheckboxes = document.getElementById('employeeCheckboxes');
-            employeeCheckboxes.innerHTML = employees.map(employee => 
-                `<label><input type="checkbox" value="${employee.name}">${employee.name} (${employee.department})</label>`
-            ).join('');
-        }
-
-        function renderSchedule() {
-            const scheduleDisplay = document.getElementById('scheduleDisplay');
-            scheduleDisplay.innerHTML = "<p>Schedule display will be generated here based on filters.</p>";
-            // Add logic to combine employee schedules, vacations, and holidays
-        }
-
-        document.getElementById('filterForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            renderSchedule();
-        });
-
+    async function loadData() {
+        const employeesResponse = await fetch('employees.json');
+        employees = await employeesResponse.json();
+        const departmentsResponse = await fetch('departments.json');
+        departments = await departmentsResponse.json();
+        const holidaysResponse = await fetch('holidays.json');
+        holidays = await holidaysResponse.json();
         populateFilters();
-    </script>
-</body>
-</html>
+    }
+
+    // Populate filters
+    function populateFilters() {
+        const departmentSelect = document.getElementById('departmentSelect');
+        departmentSelect.innerHTML = departments.map(dept =>
+            `<option value="${dept}">${dept}</option>`
+        ).join('');
+        const employeeCheckboxes = document.getElementById('employeeCheckboxes');
+        employeeCheckboxes.innerHTML = employees.map(emp =>
+            `<label><input type="checkbox" value="${emp.name}">${emp.name} (${emp.department})</label>`
+        ).join('');
+    }
+
+    // Render schedules
+    function renderSchedules() {
+        const selectedDepartment = document.getElementById('departmentSelect').value;
+        const selectedEmployees = Array.from(
+            document.querySelectorAll('#employeeCheckboxes input:checked')
+        ).map(checkbox => checkbox.value);
+        const filteredEmployees = employees.filter(emp =>
+            (selectedDepartment === "" || emp.department === selectedDepartment) &&
+            (selectedEmployees.length === 0 || selectedEmployees.includes(emp.name))
+        );
+
+        // Render filtered schedules here
+    }
+
+    document.getElementById('filterForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        renderSchedules();
+    });
+
+    loadData();
+</script>
