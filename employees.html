@@ -28,17 +28,19 @@
             </select>
             <button type="submit">Add Employee</button>
         </form>
+
         <h2>Employees</h2>
         <ul id="employeeList"></ul>
     </main>
     <footer>
         &copy; 2024 Work Schedule Planner
     </footer>
+
     <script>
         let employees = [];
         let departments = [];
 
-        // Load employees and departments from JSON file
+        // Load departments and employees from JSON file
         async function loadData() {
             try {
                 const employeeResponse = await fetch('employees.json');
@@ -60,20 +62,23 @@
             ).join('');
         }
 
-        // Render employees list
+        // Render the employee list
         function renderEmployees() {
             const employeeList = document.getElementById('employeeList');
             employeeList.innerHTML = employees.map((emp, index) => 
-                `<li>${emp.name} (${emp.department}) 
-                <button onclick="removeEmployee(${index})">Remove</button></li>`
+                `<li>
+                    ${emp.name} (${emp.department})
+                    <button onclick="removeEmployee(${index})">Remove</button>
+                </li>`
             ).join('');
         }
 
-        // Add employee
+        // Add a new employee
         document.getElementById('employeeForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const name = document.getElementById('employeeName').value.trim();
             const department = document.getElementById('departmentSelect').value;
+
             if (name && department) {
                 employees.push({ name, department, vacationDays: [], schedule: "" });
                 await saveEmployees();
@@ -82,16 +87,16 @@
             }
         });
 
-        // Remove employee
+        // Remove an employee
         async function removeEmployee(index) {
             if (confirm('Are you sure you want to remove this employee?')) {
-                employees.splice(index, 1);
-                await saveEmployees();
-                renderEmployees();
+                employees.splice(index, 1); // Remove employee from array
+                await saveEmployees(); // Save updated employee data to JSON file
+                renderEmployees(); // Re-render the employee list
             }
         }
 
-        // Save employees to employees.json
+        // Save the updated employee data to the employees.json file
         async function saveEmployees() {
             try {
                 await fetch('employees.json', {
@@ -104,7 +109,7 @@
             }
         }
 
-        // Load data on page load
+        // Initial load of data when page loads
         loadData();
     </script>
 </body>
