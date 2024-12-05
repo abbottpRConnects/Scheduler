@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vacation Days</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        nav a {
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+            border: 1px solid #4CAF50;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        nav a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #4CAF50;
+            color: white;
+        }
+        .form-group {
+            margin: 1rem 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .form-group input, .form-group select, .form-group button {
+            padding: 0.5rem;
+            width: 100%;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Vacation Days</h1>
+    </header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="employees.html">Manage Employees</a>
+        <a href="work-schedule.html">Work Schedule</a>
+    </nav>
+    <main>
+        <h2>Select Vacation Days</h2>
+        <form id="vacationForm">
+            <div class="form-group">
+                <label for="employeeSelect">Select Employee</label>
+                <select id="employeeSelect" required>
+                    <!-- Employee options will be populated dynamically -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="vacationPicker">Select Vacation Days</label>
+                <input type="text" id="vacationPicker" placeholder="Pick vacation days" readonly>
+            </div>
+            <button type="submit">Save Vacation Days</button>
+        </form>
+    </main>
+    <footer>
+        &copy; 2024 Work Schedule Planner
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        let employees = [];
+
+        // Load employees from local storage
+        function loadEmployees() {
+            const storedEmployees = localStorage.getItem('employees');
+            employees = storedEmployees ? JSON.parse(storedEmployees) : [];
+            populateEmployeeSelect();
+        }
+
+        // Populate the employee dropdown
+        function populateEmployeeSelect() {
+            const employeeSelect = document.getElementById('employeeSelect');
+            employeeSelect.innerHTML = employees.map((employee, index) => 
+                `<option value="${index}">${employee.name}</option>`
+            ).join('');
+        }
+
+        // Save vacation days for the selected employee
+        document.getElementById('vacationForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const employeeIndex = document.getElementById('employeeSelect').value;
+            const selectedDates = flatpickrInstance.selectedDates.map(date => date.toISOString().split('T')[0]);
+
+            if (employeeIndex !== "" && employees[employeeIndex]) {
+                employees[employeeIndex].vacationDays = selectedDates;
+                localStorage.setItem('employees', JSON.stringify(employees));
+                alert('Vacation days saved successfully!');
+            }
+        });
+
+        // Initialize the calendar
+        const flatpickrInstance = flatpickr("#vacationPicker", {
+            mode: "multiple",
+            dateFormat: "Y-m-d"
+        });
+
+        // Initial load
+        loadEmployees();
+    </script>
+</body>
+</html>
