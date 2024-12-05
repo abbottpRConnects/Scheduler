@@ -52,10 +52,18 @@
             display: block;
             margin-bottom: 0.5rem;
         }
-        .form-group input, .form-group select, .form-group button {
+        .form-group select, .form-group button {
             padding: 0.5rem;
             width: 100%;
             max-width: 300px;
+        }
+        .rotation-weeks {
+            display: none;
+            margin-top: 1rem;
+        }
+        .rotation-weeks label {
+            display: block;
+            margin: 0.5rem 0;
         }
         footer {
             text-align: center;
@@ -87,29 +95,45 @@
             <div class="form-group">
                 <label for="rotationType">Select Rotation Type</label>
                 <select id="rotationType" required>
-                    <option value="same-day">Same Day Every Week</option>
+                    <option value="same-day">Same Day Each Week</option>
+                    <option value="2-week">2-Week Rotation</option>
+                    <option value="3-week">3-Week Rotation</option>
                     <option value="4-week">4-Week Rotation</option>
                 </select>
             </div>
-            <div class="form-group" id="sameDayGroup">
-                <label for="workDay">Select Work Day</label>
-                <select id="workDay">
+            <div class="form-group rotation-weeks" id="weekDays">
+                <label for="week1">Week 1</label>
+                <select id="week1">
                     <option value="Monday">Monday</option>
                     <option value="Tuesday">Tuesday</option>
                     <option value="Wednesday">Wednesday</option>
                     <option value="Thursday">Thursday</option>
                     <option value="Friday">Friday</option>
                 </select>
-            </div>
-            <div class="form-group" id="rotationGroup" style="display: none;">
-                <label>Select Work Days for 4-Week Rotation</label>
-                <div>
-                    <label><input type="checkbox" value="Monday"> Monday</label>
-                    <label><input type="checkbox" value="Tuesday"> Tuesday</label>
-                    <label><input type="checkbox" value="Wednesday"> Wednesday</label>
-                    <label><input type="checkbox" value="Thursday"> Thursday</label>
-                    <label><input type="checkbox" value="Friday"> Friday</label>
-                </div>
+                <label for="week2">Week 2</label>
+                <select id="week2">
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                </select>
+                <label for="week3" style="display: none;">Week 3</label>
+                <select id="week3" style="display: none;">
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                </select>
+                <label for="week4" style="display: none;">Week 4</label>
+                <select id="week4" style="display: none;">
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                </select>
             </div>
             <button type="submit">Save Schedule</button>
         </form>
@@ -135,20 +159,29 @@
             ).join('');
         }
 
-        // Handle rotation type change
+        // Show or hide week inputs based on rotation type
         document.getElementById('rotationType').addEventListener('change', function() {
-            const sameDayGroup = document.getElementById('sameDayGroup');
-            const rotationGroup = document.getElementById('rotationGroup');
-            if (this.value === 'same-day') {
-                sameDayGroup.style.display = 'block';
-                rotationGroup.style.display = 'none';
+            const rotationType = this.value;
+            const weekDays = document.getElementById('weekDays');
+            const week3 = document.getElementById('week3');
+            const week4 = document.getElementById('week4');
+            weekDays.style.display = 'block';
+
+            if (rotationType === '2-week') {
+                week3.style.display = 'none';
+                week4.style.display = 'none';
+            } else if (rotationType === '3-week') {
+                week3.style.display = 'block';
+                week4.style.display = 'none';
+            } else if (rotationType === '4-week') {
+                week3.style.display = 'block';
+                week4.style.display = 'block';
             } else {
-                sameDayGroup.style.display = 'none';
-                rotationGroup.style.display = 'block';
+                weekDays.style.display = 'none';
             }
         });
 
-        // Handle form submission
+        // Save schedule to local storage
         document.getElementById('scheduleForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const employeeIndex = document.getElementById('employeeSelect').value;
@@ -156,15 +189,19 @@
 
             if (employeeIndex !== "" && employees[employeeIndex]) {
                 const employee = employees[employeeIndex];
+                let schedule = [];
+
                 if (rotationType === 'same-day') {
-                    const workDay = document.getElementById('workDay').value;
-                    employee.schedule = `Same day: ${workDay}`;
+                    schedule.push(document.getElementById('week1').value);
                 } else {
-                    const selectedDays = Array.from(document.querySelectorAll('#rotationGroup input:checked'))
-                        .map(input => input.value);
-                    employee.schedule = `4-week rotation: ${selectedDays.join(', ')}`;
+                    const weeks = ['week1', 'week2', 'week3', 'week4'];
+                    for (let i = 0; i < (rotationType[0]); i++) {
+                        const day = document.getElementById(weeks[i]).value;
+                        schedule.push(day);
+                    }
                 }
 
+                employee.schedule = `${rotationType}: ${schedule.join(', ')}`;
                 localStorage.setItem('employees', JSON.stringify(employees));
                 alert('Work schedule saved successfully!');
             }
