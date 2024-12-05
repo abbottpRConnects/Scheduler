@@ -1,4 +1,4 @@
-{
+[
         {
             "name": "Pace Abbott",
             "department": "CO",
@@ -11,4 +11,4 @@
             "schedule": "2-week: Friday, Monday",
             "vacationDays": ["2024-11-15"]
         }
-}
+]
