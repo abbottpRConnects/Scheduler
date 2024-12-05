@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Employees</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        nav a {
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+            border: 1px solid #4CAF50;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        nav a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .form-group {
+            margin: 1rem 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .form-group input, .form-group button {
+            padding: 0.5rem;
+            width: 100%;
+            max-width: 300px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Manage Employees</h1>
+    </header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="vacation.html">Vacation Days</a>
+        <a href="work-schedule.html">Work Schedule</a>
+    </nav>
+    <main>
+        <h2>Employee List</h2>
+        <table id="employeeTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Vacation Days</th>
+                    <th>Work Schedule</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Employee data will be inserted dynamically -->
+            </tbody>
+        </table>
+        <h3>Add Employee</h3>
+        <form id="addEmployeeForm">
+            <div class="form-group">
+                <label for="employeeName">Name</label>
+                <input type="text" id="employeeName" required>
+            </div>
+            <button type="submit">Add Employee</button>
+        </form>
+    </main>
+    <footer>
+        &copy; 2024 Work Schedule Planner
+    </footer>
+    <script>
+        let employees = [];
+
+        // Load employees from local storage or use an empty array
+        function loadEmployees() {
+            const storedEmployees = localStorage.getItem('employees');
+            employees = storedEmployees ? JSON.parse(storedEmployees) : [];
+            renderEmployeeTable();
+        }
+
+        // Save employees to local storage
+        function saveEmployees() {
+            localStorage.setItem('employees', JSON.stringify(employees));
+        }
+
+        // Render employees in the table
+        function renderEmployeeTable() {
+            const tableBody = document.getElementById('employeeTable').querySelector('tbody');
+            tableBody.innerHTML = '';
+            employees.forEach(employee => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${employee.name}</td>
+                    <td>${employee.vacationDays.join(', ') || 'None'}</td>
+                    <td>${employee.schedule || 'Not Set'}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('addEmployeeForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('employeeName').value;
+            employees.push({ name, vacationDays: [], schedule: '' });
+            saveEmployees();
+            renderEmployeeTable();
+            this.reset();
+        });
+
+        // Initial load
+        loadEmployees();
+    </script>
+</body>
+</html>
