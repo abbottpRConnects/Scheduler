@@ -2,7 +2,7 @@
   "employees": [
     {
       "name": "John Smith",
-      "rotation_cycle": 1,  // No rotation, but data is structured consistently
+      "rotation_cycle": 1,
       "off_days": {
         "week_1": ["Friday"],
         "week_2": ["Friday"],
@@ -12,7 +12,7 @@
     },
     {
       "name": "Jane Doe",
-      "rotation_cycle": 2,  // Rotation every 2 weeks
+      "rotation_cycle": 2,
       "off_days": {
         "week_1": ["Friday"],
         "week_2": ["Monday"],
@@ -22,7 +22,7 @@
     },
     {
       "name": "Jim Brown",
-      "rotation_cycle": 3,  // Rotation every 3 weeks
+      "rotation_cycle": 3,
       "off_days": {
         "week_1": ["Monday"],
         "week_2": ["Thursday"],
