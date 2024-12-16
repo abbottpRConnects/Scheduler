@@ -1,28 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Work Schedule Planner</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>On-Call Scheduler</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to Work Schedule Planner</h1>
-    </header>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="employees.html">Manage Employees</a>
-        <a href="departments.html">Manage Departments</a>
-        <a href="holidays.html">Manage Holidays</a>
-        <a href="schedule-viewer.html">Schedule Viewer</a>
-    </nav>
-    <main>
-        <h2>Overview</h2>
-        <p>Welcome to the Work Schedule Planner! Use the navigation links to manage employees, departments, holidays, and view schedules.</p>
-    </main>
-    <footer>
-        &copy; 2024 Work Schedule Planner
-    </footer>
+  <h1>On-Call Scheduler</h1>
+
+  <h2>Schedule for Week 1</h2>
+  
+  <div id="schedule-container"></div>
+
+  <script>
+    // Load the JSON data dynamically
+    fetch('scheduleData.json')
+      .then(response => response.json())
+      .then(data => {
+        generateSchedule(data);
+      })
+      .catch(error => console.error('Error loading JSON data:', error));
+
+    function generateSchedule(data) {
+      const employees = data.employees;
+      const currentWeek = data.rotation_schedule.current_week;
+
+      let scheduleHtml = '<table><thead><tr><th>Employee</th><th>Days On-Call</th></tr></thead><tbody>';
+
+      employees.forEach(employee => {
+        let offDaysForWeek = [];
+
+        // Handle employee's rotation logic
+        const weekInCycle = (currentWeek - 1) % employee.rotation_cycle + 1;
+        offDaysForWeek = employee.off_days[`week_${weekInCycle}`] || [];
+
+        let onCallDays = [];
+
+        // Loop through the 7 days of the week (starting from Thursday)
+        for (let i = 0; i < 7; i++) {
+          const dayOfWeek = (i + 4) % 7; // Start on Thursday
+          const date = new Date();
+          date.setDate(date.getDate() + i);  // Adjust date accordingly for the week
+
+          // If this day is not an off day, assign them on-call duty
+          if (!offDaysForWeek.includes(getDayName(dayOfWeek))) {
+            onCallDays.push(getDayName(dayOfWeek) + " (" + date.toDateString() + ")");
+          }
+        }
+
+        // Add employee's schedule to the table
+        scheduleHtml += `<tr><td>${employee.name}</td><td>${onCallDays.join(", ")}</td></tr>`;
+      });
+
+      scheduleHtml += '</tbody></table>';
+      document.getElementById('schedule-container').innerHTML = scheduleHtml;
+    }
+
+    function getDayName(dayIndex) {
+      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      return days[dayIndex];
+    }
+  </script>
 </body>
 </html>
