@@ -23,9 +23,10 @@
 </head>
 <body>
   <h1>On-Call Scheduler</h1>
-
-  <h2>Schedule for Week 1</h2>
   
+  <h2>Schedule for Week 1</h2>
+
+  <!-- Container to hold the dynamically generated schedule -->
   <div id="schedule-container"></div>
 
   <script>
@@ -37,11 +38,12 @@
       })
       .catch(error => console.error('Error loading JSON data:', error));
 
+    // Generate the schedule based on the current data
     function generateSchedule(data) {
       const employees = data.employees;
       const currentWeek = data.rotation_schedule.current_week;
 
-      let scheduleHtml = '<table><thead><tr><th>Employee</th><th>Days On-Call</th></tr></thead><tbody>';
+      let scheduleHtml = '<table><thead><tr><th>Employee</th><th>Week</th><th>On-Call Days</th></tr></thead><tbody>';
 
       employees.forEach(employee => {
         let offDaysForWeek = [];
@@ -65,13 +67,14 @@
         }
 
         // Add employee's schedule to the table
-        scheduleHtml += `<tr><td>${employee.name}</td><td>${onCallDays.join(", ")}</td></tr>`;
+        scheduleHtml += `<tr><td>${employee.name}</td><td>Week ${currentWeek}</td><td>${onCallDays.join(", ")}</td></tr>`;
       });
 
       scheduleHtml += '</tbody></table>';
       document.getElementById('schedule-container').innerHTML = scheduleHtml;
     }
 
+    // Convert day index to day name (e.g., 0 = Sunday, 1 = Monday, etc.)
     function getDayName(dayIndex) {
       const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
       return days[dayIndex];
