@@ -10,5 +10,71 @@
             "department": "CO",
             "schedule": "2-week: Friday, Monday",
             "vacationDays": ["2024-11-15"]
+        },
+        {
+            "name": "John Clark",
+            "department": "CO",
+            "schedule": "2-week: Monday, Friday",
+            "vacationDays": ["2024-12-25", "2024-12-26"]
+        },
+        {
+            "name": "Brian Bingham",
+            "department": "CO",
+            "schedule": "2-week: Monday, Friday",
+            "vacationDays": ["2024-12-25", "2024-12-26"]
+        },
+        {
+            "name": "Mike Woods",
+            "department": "CO",
+            "schedule": "2-week: Monday, Friday",
+            "vacationDays": ["2024-12-25", "2024-12-26"]
+        },
+        {
+            "name": "Jose Galindo",
+            "department": "Tech",
+            "schedule": "2-week: Monday, Friday",
+            "vacationDays": ["2024-12-25", "2024-12-26"]
+        },
+        {
+            "name": "Matt Oster",
+            "department": "Tech",
+            "schedule": "2-week: Monday, Friday",
+            "vacationDays": ["2024-12-25", "2024-12-26"]
+        },
+        {
+            "name": "Britton Linge",
+            "department": "Tech",
+            "schedule": "2-week: Monday, Friday",
+            "vacationDays": ["2024-12-25", "2024-12-26"]
+        },
+        {
+            "name": "Ethan Workman",
+            "department": "Tech",
+            "schedule": "2-week: Monday, Friday",
+            "vacationDays": ["2024-12-25", "2024-12-26"]
+        },
+        {
+            "name": "Marco Vargas",
+            "department": "Tech",
+            "schedule": "2-week: Monday, Friday",
+            "vacationDays": ["2024-12-25", "2024-12-26"]
+        },
+        {
+            "name": "Will Barnum",
+            "department": "Tech",
+            "schedule": "2-week: Monday, Friday",
+            "vacationDays": ["2024-12-25", "2024-12-26"]
+        },               {
+            "name": "Trent Wilson",
+            "department": "Tech",
+            "schedule": "2-week: Monday, Friday",
+            "vacationDays": ["2024-12-25", "2024-12-26"]
+        },
+                {
+            "name": "Michael Baeza",
+            "department": "Tech",
+            "schedule": "2-week: Monday, Friday",
+            "vacationDays": ["2024-12-25", "2024-12-26"]
         }
+        
 ]
