@@ -4,10 +4,7 @@
       "name": "John Smith",
       "rotation_cycle": 1,
       "off_days": {
-        "week_1": ["Friday"],
-        "week_2": ["Friday"],
-        "week_3": ["Friday"],
-        "week_4": ["Friday"]
+        "week_1": ["Friday"]
       }
     },
     {
@@ -15,9 +12,7 @@
       "rotation_cycle": 2,
       "off_days": {
         "week_1": ["Friday"],
-        "week_2": ["Monday"],
-        "week_3": ["Friday"],
-        "week_4": ["Monday"]
+        "week_2": ["Monday"]
       }
     },
     {
